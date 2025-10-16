@@ -1,0 +1,42 @@
+Create a {num_slides}-slide presentation about: {topic}
+
+  Requirements:
+  - Slide 1 must be a title slide with a catchy title and subtitle
+  - Use a variety of layouts: bullet_points, two_column, and content_with_image
+  - For bullet_points slides: provide exactly 3-5 bullet points
+  - For two_column slides: provide content for left and right columns
+  - For content_with_image slides: provide content text and image description
+  - Make content engaging, informative, and well-structured{citations_text}
+
+  Return the response in the following JSON format:
+{{
+  "slides": [
+    {{
+      "layout": "title",
+      "title": "Main Title",
+      "content": "Subtitle or tagline"
+    }},
+    {{
+      "layout": "bullet_points",
+      "title": "Key Points",
+      "bullet_points": ["Point 1", "Point 2", "Point 3"]
+    }},
+    {{
+      "layout": "two_column",
+      "title": "Comparison",
+      "left_column": "Left content",
+      "right_column": "Right content"
+    }},
+    {{
+      "layout": "content_with_image",
+      "title": "Visual Section",
+      "content": "Descriptive text",
+      "image_description": "Description of relevant image"
+    }}
+  ],
+  "citations": [
+    {{"source": "Source name", "title": "Article title", "date": "2024"}}
+  ]
+}}
+
+Ensure valid JSON format. Be creative and informative!
