@@ -1,28 +1,27 @@
-# Core dependencies
-fastapi==0.103.2
-uvicorn[standard]==0.23.2
-pydantic==2.4.2
-pydantic-settings==2.0.3
+# Core dependencies (Python 3.7 compatible versions)
+fastapi==0.88.0
+uvicorn==0.20.0
+pydantic==1.10.13
 python-multipart==0.0.6
 
 # PowerPoint generation
 python-pptx==0.6.23
 
 # LLM integration via HTTP API
-python-dotenv==1.0.0
+python-dotenv==0.21.1
 
 # Caching and rate limiting
 redis==5.0.1
 slowapi==0.1.9
 
 # HTTP client for external requests
-httpx==0.25.2
+httpx==0.23.3
 aiofiles==23.2.1
 
 # Testing
 pytest==7.4.3
 pytest-asyncio==0.21.1
-httpx==0.25.2
+httpx==0.23.3
 
 # Logging
 python-json-logger==2.0.7

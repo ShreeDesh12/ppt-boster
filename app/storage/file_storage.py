@@ -43,24 +43,26 @@ class FileStorage(BaseStorage):
         destination = os.path.join(self.base_dir, filename)
 
         try:
+            # Normalize paths for comparison
+            abs_file_path = os.path.abspath(file_path)
+            abs_destination = os.path.abspath(destination)
+
             if content:
                 # Save from bytes content
                 with open(destination, 'wb') as f:
                     f.write(content)
                 logger.info(f"Saved presentation from bytes to: {destination}")
+            elif abs_file_path == abs_destination:
+                # File is already at the destination
+                logger.info(f"Presentation already at destination: {destination}")
             elif os.path.exists(file_path):
-                # Copy from existing file
+                # Copy from existing file to destination
                 shutil.copy2(file_path, destination)
                 logger.info(f"Copied presentation from {file_path} to: {destination}")
             else:
-                # File path is already the destination
-                if os.path.abspath(file_path) != os.path.abspath(destination):
-                    shutil.move(file_path, destination)
-                    logger.info(f"Moved presentation from {file_path} to: {destination}")
-                else:
-                    logger.info(f"Presentation already at destination: {destination}")
+                raise FileNotFoundError(f"Source file not found: {file_path}")
 
-            return os.path.abspath(destination)
+            return abs_destination
 
         except Exception as e:
             logger.error(f"Error saving file: {str(e)}", exc_info=True)

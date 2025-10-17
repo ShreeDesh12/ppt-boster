@@ -2,7 +2,8 @@
 Application configuration settings
 """
 import os
-from pydantic_settings import BaseSettings
+from functools import lru_cache
+from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -14,7 +15,7 @@ class Settings(BaseSettings):
     environment: str = "development"
 
     # OpenAI Configuration
-    openai_api_key: str = os.getenv("OPENAI_API_KEY")
+    openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
 
     # Redis Configuration (for caching)
     redis_host: str = "localhost"
