@@ -4,6 +4,10 @@ Application configuration settings
 import os
 from functools import lru_cache
 from pydantic import BaseSettings
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 class Settings(BaseSettings):

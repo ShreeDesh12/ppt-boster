@@ -69,11 +69,9 @@ class ContentGenerator:
 
         if self.api_key and self.api_key != "":
             logger.info("Using LLM-based content generation")
-            print("Using LLM-based content generation")
             return await self._generate_with_llm(topic, num_slides, include_citations)
         else:
             logger.info("Using fallback content generation")
-            print("using fallback content generation")
             return self._generate_fallback_content(topic, num_slides, include_citations)
 
     async def _generate_with_llm(
@@ -108,18 +106,8 @@ class ContentGenerator:
 
             payload = {
                 "model": settings.llm_model,
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": SYSTEM_INSTRUCTION
-                    },
-                    {
-                        "role": "user",
-                        "content": user_prompt
-                    }
-                ],
-                "temperature": settings.llm_temperature,
-                "max_tokens": settings.llm_max_tokens
+                "input": f"{SYSTEM_INSTRUCTION}\n\n{user_prompt}",
+                "temperature": settings.llm_temperature
             }
 
             logger.debug(f"Calling OpenAI API with model: {settings.llm_model}, temperature: {settings.llm_temperature}")
@@ -139,7 +127,27 @@ class ContentGenerator:
                     return self._generate_fallback_content(topic, num_slides, include_citations)
 
                 data = response.json()
-                content = data['choices'][0]['message']['content']
+                logger.debug(f"API response status: {data.get('status')}")
+
+                # Handle different response structures
+                if 'choices' in data:
+                    # Standard chat completions format
+                    content = data['choices'][0]['message']['content']
+                elif 'output' in data:
+                    # Responses API format
+                    # Extract text from output[0]['content'][0]['text']
+                    if isinstance(data['output'], list) and len(data['output']) > 0:
+                        output_item = data['output'][0]
+                        if 'content' in output_item and len(output_item['content']) > 0:
+                            content = output_item['content'][0]['text']
+                        else:
+                            raise ValueError("No content found in response output")
+                    else:
+                        raise ValueError("Invalid output structure in response")
+                else:
+                    logger.error(f"Unexpected response structure: {data}")
+                    raise ValueError("Unexpected API response structure")
+
                 logger.debug(f"Received LLM response, length: {len(content)} characters")
 
                 return self._parse_llm_response(content, num_slides)
